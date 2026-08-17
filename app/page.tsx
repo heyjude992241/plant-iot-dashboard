@@ -5,12 +5,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 const pad = (value: number) => String(value).padStart(2, "0");
 
 export default function Home() {
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState<Date | null>(null);
   const [plantTilt, setPlantTilt] = useState({ x: 0, y: 0 });
   const [isPlantAwake, setPlantAwake] = useState(false);
   const plantRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setNow(new Date());
     const timer = window.setInterval(() => setNow(new Date()), 1000);
     const awake = window.setTimeout(() => setPlantAwake(true), 700);
     return () => {
@@ -19,10 +20,10 @@ export default function Home() {
     };
   }, []);
 
-  const time = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
-  const seconds = pad(now.getSeconds());
+  const time = now ? `${pad(now.getHours())}:${pad(now.getMinutes())}` : "--:--";
+  const seconds = now ? pad(now.getSeconds()) : "--";
   const date = useMemo(
-    () => new Intl.DateTimeFormat("en-MY", { weekday: "short", day: "2-digit", month: "short" }).format(now),
+    () => now ? new Intl.DateTimeFormat("en-MY", { weekday: "short", day: "2-digit", month: "short" }).format(now) : "Local time",
     [now],
   );
 
