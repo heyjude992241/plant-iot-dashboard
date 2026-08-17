@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #102019;
+  --deep: #14271d;
+  --panel: rgba(249, 248, 239, 0.86);
+  --panel-strong: #f8f6eb;
+  --sage: #8ca588;
+  --leaf: #416649;
+  --leaf-light: #799b70;
+  --lime: #c7e674;
+  --line: rgba(16, 32, 25, 0.14);
+  --muted: #6f7e75;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--deep); }
+body {
+  margin: 0;
+  min-width: 320px;
+  background: radial-gradient(circle at 14% 10%, rgba(111,150,105,.24), transparent 28rem), radial-gradient(circle at 90% 75%, rgba(58,123,104,.18), transparent 34rem), var(--deep);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+button, input { font: inherit; }
+
+.dashboard-shell { min-height: 100vh; max-width: 1580px; margin: 0 auto; padding: 22px; }
+.topbar { min-height: 72px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; color: #eef3e7; border-bottom: 1px solid rgba(238,243,231,.15); padding: 0 4px 18px; }
+.brand-block { display: flex; align-items: center; gap: 12px; }
+.brand-mark { width: 38px; height: 38px; border: 1px solid rgba(199,230,116,.45); border-radius: 50%; position: relative; display: grid; place-items: center; }
+.brand-mark::before, .brand-mark::after { content: ""; position: absolute; width: 2px; height: 20px; background: var(--lime); transform-origin: bottom; border-radius: 5px; }
+.brand-mark::before { transform: translate(-4px, -1px) rotate(-27deg); }
+.brand-mark::after { transform: translate(4px, -1px) rotate(27deg); }
+.brand-mark span { width: 4px; height: 26px; background: var(--lime); border-radius: 4px; transform: translateY(3px); }
+.brand { font-size: 17px; font-weight: 700; letter-spacing: .08em; }
+.brand span { color: var(--lime); }
+.eyebrow, .metric-label { font-size: 10px; letter-spacing: .18em; font-weight: 700; }
+.brand-block .eyebrow { color: rgba(238,243,231,.48); margin-top: 3px; }
+.topbar-center { display: flex; align-items: center; gap: 9px; padding: 10px 15px; color: rgba(238,243,231,.68); border: 1px solid rgba(238,243,231,.12); border-radius: 999px; font-size: 9px; letter-spacing: .12em; }
+.online-dot, .fresh-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 12px var(--lime); }
+.separator { width: 1px; height: 12px; background: rgba(238,243,231,.18); }
+.signal-bars { height: 12px; display: flex; align-items: end; gap: 2px; }
+.signal-bars i { width: 2px; background: var(--lime); border-radius: 3px; }
+.signal-bars i:nth-child(1){height:4px}.signal-bars i:nth-child(2){height:7px}.signal-bars i:nth-child(3){height:10px}.signal-bars i:nth-child(4){height:12px;opacity:.25}
+.clock-block { justify-self: end; text-align: right; }
+.clock { line-height: 1; font-size: 29px; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.clock sup { font-size: 11px; color: var(--lime); margin-left: 4px; vertical-align: top; }
+.clock-meta { display: flex; justify-content: flex-end; gap: 12px; color: rgba(238,243,231,.48); font-size: 9px; letter-spacing: .14em; margin-top: 5px; }
+
+.dashboard-grid { display: grid; grid-template-columns: minmax(470px, 1.12fr) minmax(520px, .88fr); gap: 14px; margin-top: 14px; }
+.panel { background: var(--panel); border: 1px solid rgba(255,255,255,.34); box-shadow: 0 16px 44px rgba(4,19,12,.17); backdrop-filter: blur(18px); border-radius: 18px; }
+.plant-panel { min-height: 710px; display: flex; flex-direction: column; overflow: hidden; padding: 22px; }
+.panel-topline { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+.panel-topline h1 { margin: 6px 0 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(26px, 3vw, 43px); font-weight: 400; letter-spacing: -.04em; }
+.live-tag { display: flex; align-items: center; gap: 7px; font-size: 9px; letter-spacing: .14em; border: 1px solid var(--line); border-radius: 999px; padding: 8px 10px; }
+.live-tag span { width: 6px; height: 6px; border-radius: 50%; background: #5a9a54; }
+
+.plant-stage { --tilt-x: 0deg; --tilt-y: 0deg; position: relative; flex: 1; min-height: 495px; perspective: 1100px; display: grid; place-items: center; overflow: hidden; }
+.plant-stage::before { content: ""; position: absolute; width: 470px; height: 470px; border-radius: 50%; background: radial-gradient(circle, rgba(143,170,126,.24), rgba(143,170,126,.04) 55%, transparent 72%); }
+.orbital-ring { position: absolute; width: 390px; height: 390px; border: 1px solid rgba(50,84,56,.14); border-radius: 50%; transform: rotateX(65deg) rotateZ(-16deg); }
+.ring-two { width: 285px; height: 285px; border-style: dashed; transform: rotateX(72deg) rotateZ(29deg); }
+.scan-line { position: absolute; width: 1px; height: 76%; background: linear-gradient(transparent, rgba(65,102,73,.25), transparent); left: 50%; }
+.plant-model { position: relative; width: 330px; height: 450px; transform-style: preserve-3d; transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(16px); transition: transform .25s ease-out; }
+.plant-model::before { content: ""; position: absolute; left: 50%; bottom: 106px; width: 180px; height: 210px; transform: translateX(-50%) translateZ(-30px); background: radial-gradient(ellipse, rgba(82,123,72,.16), transparent 70%); filter: blur(15px); }
+.stem { position: absolute; z-index: 2; left: 50%; bottom: 120px; width: 5px; height: 210px; background: linear-gradient(90deg, #45674a, #87a376); border-radius: 100% 0; transform-origin: bottom; box-shadow: inset -1px 0 rgba(17,50,27,.28); }
+.stem-1 { transform: rotate(-19deg); height: 220px; }.stem-2{transform:rotate(17deg);height:230px}.stem-3{transform:rotate(-6deg);height:270px}.stem-4{transform:rotate(7deg);height:185px}
+.leaf { position: absolute; z-index: 4; left: 50%; bottom: 270px; width: 112px; height: 70px; transform-origin: 4px 50%; transform-style: preserve-3d; }
+.leaf span { display: block; width: 100%; height: 100%; border-radius: 80% 8% 80% 8%; background: repeating-radial-gradient(ellipse at 0 50%, transparent 0 12px, rgba(217,232,172,.19) 13px 14px), linear-gradient(135deg, var(--leaf-light), var(--leaf) 70%); box-shadow: inset 9px -10px 20px rgba(17,54,29,.17), 0 8px 16px rgba(23,55,30,.14); transform: rotate(-6deg); }
+.leaf span::after { content:""; position:absolute; left:0; top:50%; width:90%; height:1px; background:rgba(225,239,198,.45); transform:rotate(-4deg); transform-origin:left; }
+.leaf-1{transform:translate(-2px,-1px) rotate(-142deg) rotateY(-22deg);}.leaf-2{transform:translate(6px,-27px) rotate(-34deg) rotateY(19deg);}.leaf-3{transform:translate(-1px,-88px) rotate(-112deg) scale(.95);}.leaf-4{transform:translate(1px,-100px) rotate(-52deg) scale(.9);}.leaf-5{transform:translate(-7px,-150px) rotate(-88deg) scale(.82);}.leaf-6{transform:translate(-4px,38px) rotate(-170deg) scale(.76);}.leaf-7{transform:translate(2px,53px) rotate(-10deg) scale(.72);}
+.pot-rim { position: absolute; z-index: 6; left: 50%; bottom: 101px; width: 154px; height: 28px; transform: translateX(-50%) rotateX(63deg); background: #d8c9a6; border-radius: 50%; box-shadow: inset 0 7px 0 #8b7b5d; }
+.pot { position: absolute; z-index: 5; left: 50%; bottom: 16px; width: 132px; height: 104px; transform: translateX(-50%); background: linear-gradient(90deg,#988c6f,#d8c9a6 40%,#aa9a78); clip-path: polygon(0 0,100% 0,84% 100%,16% 100%); }
+.pot span { position:absolute; left:50%; bottom:0; width:70%; height:90%; transform:translateX(-50%); border-left:1px solid rgba(255,255,255,.25); border-right:1px solid rgba(60,50,35,.08); }
+.pot-shadow { position:absolute; z-index:1; left:50%; bottom:0; width:210px; height:32px; transform:translateX(-50%); background:rgba(26,43,32,.16); filter:blur(11px); border-radius:50%; }
+.plant-sensor { position: absolute; display: flex; flex-direction: column; gap: 2px; padding-left: 24px; font-size: 9px; letter-spacing: .12em; color: var(--muted); }
+.plant-sensor::before { content:""; position:absolute; left:0; top:10px; width:16px; border-top:1px solid rgba(42,74,49,.4); }
+.plant-sensor::after { content:""; position:absolute; left:-4px; top:7px; width:7px; height:7px; border:1px solid rgba(42,74,49,.5); border-radius:50%; }
+.plant-sensor b { color: var(--ink); font-size: 13px; letter-spacing:0; }.sensor-a{left:8%;bottom:35%;}.sensor-b{right:3%;top:28%;}
+.plant-footer { border-top: 1px solid var(--line); padding-top: 16px; }
+.hydration-block { display: flex; align-items: center; gap: 14px; }
+.hydration-number { font: 400 48px/1 Georgia, serif; letter-spacing: -.06em; }.hydration-number span{font:700 13px Arial;color:var(--leaf);margin-left:4px}.hydration-copy{font-size:12px;color:var(--muted);margin-top:4px}
+.hydration-track, .charge-track { height: 4px; background: rgba(30,59,40,.1); margin-top: 13px; overflow: hidden; border-radius: 10px; }
+.hydration-track span, .charge-track span { display:block;height:100%;background:linear-gradient(90deg,var(--leaf),var(--lime));border-radius:10px; }
+
+.metrics-column { display: grid; grid-template-rows: 1.05fr 1fr .72fr; gap: 14px; }
+.climate-card, .metric-card, .battery-card { padding: 20px; overflow:hidden; }
+.card-heading { display: flex; align-items: start; gap: 11px; }.card-heading p{font-size:10px;color:var(--muted);margin:3px 0 0}.metric-index{display:grid;place-items:center;width:26px;height:26px;border:1px solid var(--line);border-radius:50%;font-size:9px;color:var(--muted)}.fresh-dot{margin-left:auto;margin-top:6px;background:#579352}
+.climate-readings { display:grid;grid-template-columns:1fr auto 1fr;align-items:end;margin:20px 0 14px; }.climate-readings>div:not(.climate-divider){display:grid;grid-template-columns:auto 1fr;align-items:start}.reading{font:400 clamp(42px,4.3vw,67px)/.9 Georgia,serif;letter-spacing:-.07em}.unit{font-size:14px;color:var(--leaf);margin:3px 0 0 6px}.climate-readings small{grid-column:1/3;font-size:9px;letter-spacing:.15em;color:var(--muted);margin-top:10px}.climate-divider{width:1px;height:64px;background:var(--line);margin:0 25px}
+.mini-chart { height: 46px; display:flex;align-items:end;gap:4px;border-bottom:1px solid var(--line);padding:0 2px 5px; }.mini-chart i{flex:1;min-width:2px;background:linear-gradient(to top,rgba(65,102,73,.24),rgba(65,102,73,.7));border-radius:2px 2px 0 0}.chart-axis{display:flex;justify-content:space-between;font-size:8px;color:var(--muted);letter-spacing:.1em;margin-top:6px}
+.split-metrics { display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:0}.metric-card{display:flex;flex-direction:column}.radial-gauge{--value:64;width:140px;aspect-ratio:1;margin:auto;display:grid;place-items:center;border-radius:50%;background:conic-gradient(var(--leaf) calc(var(--value)*1%),rgba(65,102,73,.09) 0);position:relative}.radial-gauge::before{content:"";position:absolute;inset:9px;background:var(--panel-strong);border-radius:50%}.radial-gauge>div{position:relative;text-align:center}.radial-gauge strong,.tank-value strong{font:400 42px/1 Georgia,serif;letter-spacing:-.06em}.radial-gauge span,.tank-value span{font-size:11px;color:var(--leaf);margin-left:3px}.radial-gauge small,.tank-value small{display:block;font-size:8px;letter-spacing:.15em;color:var(--muted);margin-top:5px}.metric-foot{display:flex;align-items:center;justify-content:space-between;font-size:9px;color:var(--muted);border-top:1px solid var(--line);padding-top:11px}.metric-foot b{font-size:9px;color:var(--leaf);letter-spacing:.08em}
+.tank-visual{display:flex;align-items:center;justify-content:center;gap:17px;flex:1}.tank-shell{width:56px;height:106px;border:2px solid rgba(33,65,47,.35);border-radius:8px 8px 14px 14px;padding:5px;display:flex;align-items:end}.water-fill{height:72%;width:100%;background:linear-gradient(#91c9bd,#4b998f);border-radius:4px 4px 8px 8px;position:relative;overflow:hidden}.water-fill span{position:absolute;width:40px;height:12px;border-radius:50%;background:rgba(255,255,255,.2);top:-4px}.water-fill span+span{left:14px;top:9px}.tank-value{min-width:82px}
+.battery-card{display:grid;grid-template-columns:1fr 1.45fr;gap:20px;align-items:center}.battery-main{display:flex;align-items:center;justify-content:space-between;gap:15px}.battery-reading{white-space:nowrap}.battery-reading strong{font:400 42px/1 Georgia,serif}.battery-reading span{font-size:10px;color:var(--leaf);margin-left:3px}.energy-flow{display:flex;align-items:center;gap:12px}.energy-source{display:flex;align-items:center;gap:8px}.energy-source div{display:flex;flex-direction:column}.energy-source small{font-size:8px;letter-spacing:.13em;color:var(--muted)}.energy-source b{font-size:11px;margin-top:3px}.sun-icon{font-size:22px;color:#a88334}.flow-line{display:flex;gap:5px;flex:1;justify-content:center}.flow-line i{width:5px;height:5px;border-radius:50%;background:var(--leaf)}.flow-line i:nth-child(2){opacity:.55}.flow-line i:nth-child(3){opacity:.2}.battery-icon{height:32px;min-width:68px;border:2px solid var(--leaf);border-radius:5px;padding:4px;position:relative}.battery-icon::after{content:"";position:absolute;right:-6px;top:8px;width:4px;height:12px;background:var(--leaf);border-radius:0 3px 3px 0}.battery-icon span{display:block;height:100%;background:linear-gradient(90deg,var(--leaf),var(--lime));border-radius:2px}.battery-card .charge-track,.battery-card>.metric-foot{grid-column:1/3;margin-top:0}
+
+.system-strip{margin-top:14px;min-height:88px;padding:16px 22px;display:grid;grid-template-columns:1fr auto .85fr auto 1.3fr auto .75fr;align-items:center;gap:22px}.system-state{display:flex;align-items:center;gap:13px}.pulse-core{width:30px;height:30px;border:1px solid rgba(65,102,73,.32);border-radius:50%;position:relative}.pulse-core::after{content:"";position:absolute;inset:9px;background:var(--leaf);border-radius:50%;box-shadow:0 0 0 5px rgba(65,102,73,.09)}.system-state b{font-size:11px;letter-spacing:.08em}.strip-divider{width:1px;height:38px;background:var(--line)}.watering-info,.device-info{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:end}.watering-info span,.device-info span{grid-column:1/3;font-size:8px;letter-spacing:.15em;color:var(--muted)}.watering-info b,.device-info b{font:400 20px/1 Georgia,serif}.watering-info small,.device-info small{font-size:9px;color:var(--muted)}.pump-line{display:flex;align-items:center}.pump-line i{height:1px;flex:1;background:repeating-linear-gradient(90deg,var(--leaf) 0 5px,transparent 5px 9px)}.pump-node,.soil-node{font-size:8px;letter-spacing:.12em;border:1px solid var(--line);padding:7px 9px;border-radius:999px}
+
+@media (max-width: 1050px){.dashboard-grid{grid-template-columns:1fr}.plant-panel{min-height:660px}.metrics-column{grid-template-rows:auto}.topbar-center{display:none}.topbar{grid-template-columns:1fr 1fr}.system-strip{grid-template-columns:1fr 1fr 1fr 1fr}.strip-divider{display:none}.pump-line{order:4}.dashboard-shell{padding:16px}}
+@media (max-width: 680px){.topbar{padding-bottom:14px}.brand-block .eyebrow{display:none}.clock{font-size:24px}.clock-meta span:first-child{display:none}.dashboard-shell{padding:10px}.plant-panel{min-height:600px;padding:16px}.plant-stage{min-height:430px}.plant-model{transform:rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(25px) scale(.82)}.orbital-ring{width:330px;height:330px}.sensor-b{right:0}.split-metrics{grid-template-columns:1fr}.battery-card{grid-template-columns:1fr}.battery-card .charge-track,.battery-card>.metric-foot{grid-column:1}.system-strip{grid-template-columns:1fr 1fr;gap:18px}.pump-line{order:0}.climate-divider{margin:0 12px}.reading{font-size:44px}.climate-card,.metric-card,.battery-card{padding:16px}}
+
+/* Living-system motion */
+.plant-panel { animation: panel-arrive .72s cubic-bezier(.2,.8,.2,1) both; }
+.live-tag span, .pulse-core::after { animation: status-pulse 2s ease-in-out infinite; }
+.ring-two { animation: orbit-drift 18s linear infinite; }
+.scan-line { animation: scan-breathe 3.6s ease-in-out infinite; }
+.plant-model {
+  opacity: 0;
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(70px) scale(.72);
+  transition: transform 1.15s cubic-bezier(.16,1,.3,1), opacity .65s ease;
+}
+.plant-stage.is-awake .plant-model {
+  opacity: 1;
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(16px) scale(1);
+  transition: transform .28s ease-out, opacity .65s ease;
+}
+.leaf span {
+  opacity: 0;
+  transform: rotate(-6deg) scaleX(.2);
+  transform-origin: left center;
+  transition: transform .9s cubic-bezier(.16,1,.3,1), opacity .45s ease;
+}
+.plant-stage.is-awake .leaf span { opacity:1; transform:rotate(-6deg) scaleX(1); animation:leaf-breathe 4.8s ease-in-out infinite; }
+.plant-stage.is-awake .leaf-2 span { animation-delay:-.8s; transition-delay:.08s; }
+.plant-stage.is-awake .leaf-3 span { animation-delay:-1.7s; transition-delay:.16s; }
+.plant-stage.is-awake .leaf-4 span { animation-delay:-2.5s; transition-delay:.22s; }
+.plant-stage.is-awake .leaf-5 span { animation-delay:-3.4s; transition-delay:.28s; }
+.plant-stage.is-awake .leaf-6 span { animation-delay:-4s; transition-delay:.34s; }
+.plant-stage.is-awake .leaf-7 span { animation-delay:-1.2s; transition-delay:.4s; }
+.plant-stage:hover .leaf span { animation-name:leaf-greet; animation-duration:.9s; }
+.climate-card, .metric-card, .battery-card { animation:panel-arrive .66s cubic-bezier(.2,.8,.2,1) both; }
+.climate-card { animation-delay:.08s; }
+.split-metrics .metric-card:first-child { animation-delay:.16s; }
+.split-metrics .metric-card:last-child { animation-delay:.23s; }
+.battery-card { animation-delay:.31s; }
+.system-strip { animation:panel-arrive .65s .4s cubic-bezier(.2,.8,.2,1) both; }
+.water-fill span { animation:water-wave 3s ease-in-out infinite; }
+.water-fill span + span { animation-delay:-1.2s; }
+.flow-line i { animation:energy-hop 1.4s ease-in-out infinite; }
+.flow-line i:nth-child(2) { animation-delay:.18s; }
+.flow-line i:nth-child(3) { animation-delay:.36s; }
+
+@keyframes panel-arrive { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes leaf-breathe { 0%,100% { transform:rotate(-6deg) scaleX(1) rotateY(0); } 50% { transform:rotate(-3deg) scaleX(1.025) rotateY(7deg); } }
+@keyframes leaf-greet { 0%,100% { transform:rotate(-6deg) scaleX(1) rotateY(0); } 38% { transform:rotate(1deg) scaleX(1.06) rotateY(14deg); } 68% { transform:rotate(-9deg) scaleX(.98) rotateY(-4deg); } }
+@keyframes orbit-drift { from { transform:rotateX(72deg) rotateZ(29deg); } to { transform:rotateX(72deg) rotateZ(389deg); } }
+@keyframes scan-breathe { 0%,100% { opacity:.25; transform:translateX(-34px) scaleY(.9); } 50% { opacity:1; transform:translateX(34px) scaleY(1.05); } }
+@keyframes status-pulse { 0%,100% { opacity:.55; transform:scale(.82); } 50% { opacity:1; transform:scale(1.18); } }
+@keyframes water-wave { 0%,100% { transform:translateX(-8px); } 50% { transform:translateX(9px); } }
+@keyframes energy-hop { 0%,100% { transform:translateY(0); opacity:.25; } 50% { transform:translateY(-3px); opacity:1; } }
+
+@media (max-width:680px) {
+  .plant-stage.is-awake .plant-model { transform:rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(25px) scale(.82); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+}
