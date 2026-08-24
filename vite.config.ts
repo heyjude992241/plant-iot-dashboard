@@ -10,6 +10,9 @@ const { d1, r2 } = hostingConfig;
 
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
+const githubPagesBase = process.env.GITHUB_ACTIONS === "true"
+  ? "/plant-iot-dashboard"
+  : "";
 
 const localBindingConfig = {
   main: "./worker/index.ts",
@@ -46,6 +49,13 @@ export default defineConfig(async () => {
   return {
     server: isCodexSeatbeltSandbox
       ? { watch: { useFsEvents: false, usePolling: true } }
+      : undefined,
+    experimental: githubPagesBase
+      ? {
+          renderBuiltUrl(filename) {
+            return `${githubPagesBase}/${filename}`;
+          },
+        }
       : undefined,
     plugins: [
       vinext(),
