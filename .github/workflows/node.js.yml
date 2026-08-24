@@ -34,6 +34,13 @@ jobs:
       - name: Build static site
         run: npm run build
 
+      - name: Inspect static output
+        run: |
+          echo "=== dist/client files ==="
+          find dist/client -maxdepth 4 -type f | sort
+          echo "=== index candidates ==="
+          find dist/client -type f \( -name 'index.html' -o -name '*.html' \) -print | sort
+
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
