@@ -66,7 +66,7 @@ export default function Home() {
           <div className="panel-topline">
             <div>
               <div className="eyebrow">PLANT PROFILE / 01</div>
-              <h1>Calathea Orbifolia</h1>
+              <h1>Anak Pokok Lohansung</h1>
             </div>
             <div className="live-tag"><span /> LIVE</div>
           </div>
@@ -78,7 +78,7 @@ export default function Home() {
             onPointerEnter={() => setPlantAwake(true)}
             onPointerLeave={() => setPlantTilt({ x: 0, y: 0 })}
             style={{ "--tilt-x": `${plantTilt.x}deg`, "--tilt-y": `${plantTilt.y}deg` } as React.CSSProperties}
-            aria-label="Animated three dimensional Calathea plant. Move the pointer over the plant to make it respond."
+            aria-label="Animated three dimensional young Lohansung plant. Move the pointer over the plant to make it respond."
           >
             <div className="orbital-ring ring-one" />
             <div className="orbital-ring ring-two" />

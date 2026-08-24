@@ -1,16 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #102019;
-  --deep: #14271d;
-  --panel: rgba(249, 248, 239, 0.86);
-  --panel-strong: #f8f6eb;
+  --ink: #15231c;
+  --deep: #dfe7db;
+  --panel: #e6eee2;
+  --panel-strong: #edf4e9;
   --sage: #8ca588;
   --leaf: #416649;
   --leaf-light: #799b70;
-  --lime: #c7e674;
-  --line: rgba(16, 32, 25, 0.14);
+  --lime: #9fcb52;
+  --line: transparent;
   --muted: #6f7e75;
+  --shadow-dark: rgba(88, 112, 91, .28);
+  --shadow-light: rgba(255, 255, 255, .88);
 }
 
 * { box-sizing: border-box; }
@@ -18,7 +20,7 @@ html { background: var(--deep); }
 body {
   margin: 0;
   min-width: 320px;
-  background: radial-gradient(circle at 14% 10%, rgba(111,150,105,.24), transparent 28rem), radial-gradient(circle at 90% 75%, rgba(58,123,104,.18), transparent 34rem), var(--deep);
+  background: linear-gradient(135deg, #edf4e9, #d8e3d5 52%, #eef3ea);
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -151,4 +153,81 @@ button, input { font: inherit; }
 }
 @media (prefers-reduced-motion: reduce) {
   *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+}
+
+/* Neumorphic refresh */
+.topbar { color: var(--ink); border-bottom: 0; }
+.brand-block .eyebrow, .topbar-center, .clock-meta { color: var(--muted); }
+.brand-mark, .panel, .topbar-center, .live-tag, .metric-index, .tank-shell, .battery-icon, .pulse-core, .pump-node, .soil-node { border: 0; }
+.brand-mark, .panel {
+  background: var(--panel);
+  box-shadow: 14px 14px 28px var(--shadow-dark), -14px -14px 28px var(--shadow-light);
+}
+.brand-mark { box-shadow: 7px 7px 14px var(--shadow-dark), -7px -7px 14px var(--shadow-light); }
+.topbar-center, .live-tag, .metric-index, .tank-shell, .battery-icon, .pulse-core, .pump-node, .soil-node, .hydration-track, .charge-track {
+  background: var(--panel);
+  box-shadow: inset 5px 5px 10px rgba(108,130,111,.18), inset -5px -5px 10px rgba(255,255,255,.76);
+}
+.plant-stage::before {
+  background: var(--panel);
+  box-shadow: inset 22px 22px 48px rgba(108,130,111,.18), inset -22px -22px 48px rgba(255,255,255,.75);
+}
+.orbital-ring {
+  border: 0;
+  box-shadow: inset 4px 4px 10px rgba(85,110,88,.16), inset -4px -4px 10px rgba(255,255,255,.56);
+}
+.plant-footer, .metric-foot { border-top: 0; }
+.strip-divider { background: rgba(49,94,61,.08); }
+.mini-chart { border-bottom: 0; }
+.radial-gauge {
+  box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+}
+.radial-gauge::before {
+  box-shadow: inset 6px 6px 12px rgba(108,130,111,.16), inset -6px -6px 12px rgba(255,255,255,.75);
+}
+
+/* Young Lohansung form */
+.stem {
+  width: 7px;
+  background: linear-gradient(90deg, #5d553c, #8a7d54 45%, #315e3d);
+  border-radius: 10px;
+}
+.stem-1 { transform: rotate(-24deg); height: 190px; }
+.stem-2 { transform: rotate(22deg); height: 205px; }
+.stem-3 { transform: rotate(-3deg); height: 280px; }
+.stem-4 { transform: rotate(10deg); height: 158px; }
+.leaf { width: 150px; height: 38px; }
+.leaf span {
+  position: relative;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(49,94,61,.98), rgba(109,151,105,.18));
+  box-shadow: 0 10px 18px rgba(67,92,67,.16);
+}
+.leaf span::before,
+.leaf span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: repeating-linear-gradient(105deg, transparent 0 8px, #315e3d 8px 11px, transparent 11px 18px);
+  transform-origin: left center;
+}
+.leaf span::after {
+  transform: scaleY(-1) translateY(-8px);
+  opacity: .82;
+  background: repeating-linear-gradient(75deg, transparent 0 8px, #558755 8px 11px, transparent 11px 18px);
+}
+.leaf-1 { transform: translate(-4px,6px) rotate(-156deg) rotateY(-18deg); }
+.leaf-2 { transform: translate(5px,-24px) rotate(-24deg) rotateY(18deg); }
+.leaf-3 { transform: translate(-3px,-80px) rotate(-132deg) scale(.92); }
+.leaf-4 { transform: translate(4px,-103px) rotate(-44deg) scale(.9); }
+.leaf-5 { transform: translate(-2px,-153px) rotate(-94deg) scale(.78); }
+.leaf-6 { transform: translate(-8px,50px) rotate(-182deg) scale(.66); }
+.leaf-7 { transform: translate(4px,54px) rotate(-2deg) scale(.64); }
+.pot-rim {
+  background: #d7dfd1;
+  box-shadow: inset 6px 6px 12px rgba(103,116,100,.3), inset -6px -6px 12px rgba(255,255,255,.78);
+}
+.pot {
+  background: linear-gradient(135deg,#d2dccb,#eef4e8 44%,#bccbb8);
 }
