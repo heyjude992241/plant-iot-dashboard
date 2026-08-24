@@ -34,12 +34,16 @@ jobs:
       - name: Build static site
         run: npm run build
 
-      - name: Inspect static output
+      - name: Verify static output
         run: |
           echo "=== dist/client files ==="
           find dist/client -maxdepth 4 -type f | sort
-          echo "=== index candidates ==="
-          find dist/client -type f \( -name 'index.html' -o -name '*.html' \) -print | sort
+          echo "=== HTML files ==="
+          find dist/client -type f -name '*.html' -print | sort
+          test -f dist/client/index.html || {
+            echo "ERROR: dist/client/index.html was not generated. GitHub Pages would deploy successfully but return 404 at the site root."
+            exit 1
+          }
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
