@@ -1,221 +1,37 @@
 "use client";
-
-import { useEffect, useMemo, useRef, useState } from "react";
-
-const pad = (value: number) => String(value).padStart(2, "0");
-
-const climateBars = [34, 42, 38, 46, 51, 47, 58, 64, 61, 70, 66, 74, 71, 78, 74, 69, 72, 65, 68, 61, 64, 58, 61, 54];
-
-const lohansungLeaves = [
-  { x: -7, y: 278, r: -88, s: 0.72 }, { x: 8, y: 270, r: -18, s: 0.74 },
-  { x: -14, y: 252, r: -128, s: 0.8 }, { x: 13, y: 246, r: 22, s: 0.82 },
-  { x: -17, y: 228, r: -146, s: 0.9 }, { x: 16, y: 224, r: 38, s: 0.88 },
-  { x: -20, y: 204, r: -158, s: 0.96 }, { x: 20, y: 198, r: 48, s: 0.94 },
-  { x: -23, y: 181, r: -166, s: 1 }, { x: 24, y: 176, r: 55, s: 1 },
-  { x: -25, y: 157, r: -171, s: 1.04 }, { x: 25, y: 152, r: 61, s: 1.03 },
-  { x: -25, y: 133, r: -176, s: 1.02 }, { x: 26, y: 128, r: 67, s: 1.04 },
-  { x: -24, y: 110, r: -181, s: 0.98 }, { x: 25, y: 105, r: 72, s: 1 },
-  { x: -22, y: 88, r: -186, s: 0.94 }, { x: 23, y: 82, r: 78, s: 0.96 },
-  { x: -19, y: 67, r: -192, s: 0.88 }, { x: 20, y: 62, r: 84, s: 0.9 },
-  { x: -13, y: 48, r: -199, s: 0.82 }, { x: 15, y: 43, r: 92, s: 0.84 },
-  { x: -8, y: 31, r: -208, s: 0.72 }, { x: 10, y: 26, r: 102, s: 0.74 },
-];
-
-const lohansungBranches = [
-  { x: -4, y: 106, r: -28, h: 76 },
-  { x: 4, y: 128, r: 26, h: 82 },
-  { x: -3, y: 166, r: -22, h: 69 },
-  { x: 3, y: 198, r: 20, h: 66 },
-];
-
-export default function Home() {
-  const [now, setNow] = useState<Date | null>(null);
-  const [plantTilt, setPlantTilt] = useState({ x: 0, y: 0 });
-  const [isPlantAwake, setPlantAwake] = useState(false);
-  const plantRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setNow(new Date());
-    const timer = window.setInterval(() => setNow(new Date()), 1000);
-    const awake = window.setTimeout(() => setPlantAwake(true), 650);
-    return () => {
-      window.clearInterval(timer);
-      window.clearTimeout(awake);
-    };
-  }, []);
-
-  const time = now ? `${pad(now.getHours())}:${pad(now.getMinutes())}` : "--:--";
-  const seconds = now ? pad(now.getSeconds()) : "--";
-  const date = useMemo(
-    () => now ? new Intl.DateTimeFormat("en-MY", { weekday: "short", day: "2-digit", month: "short" }).format(now) : "Local time",
-    [now],
-  );
-
-  function respondToPointer(event: React.PointerEvent<HTMLDivElement>) {
-    const box = plantRef.current?.getBoundingClientRect();
-    if (!box) return;
-    setPlantTilt({
-      x: ((event.clientY - box.top) / box.height - 0.5) * -7,
-      y: ((event.clientX - box.left) / box.width - 0.5) * 10,
-    });
-  }
-
-  return (
-    <main className="dashboard-shell">
-      <header className="topbar neu-raised">
-        <div className="brand-block">
-          <div className="brand-mark" aria-hidden="true"><span /></div>
-          <div>
-            <div className="brand">VERDANT<span>.OS</span></div>
-            <div className="eyebrow">SMART PLANT CARE</div>
-          </div>
-        </div>
-
-        <div className="status-pill neu-inset" aria-label="System connection status">
-          <span className="signal-bars" aria-hidden="true"><i /><i /><i /><i /></span>
-          <span className="online-dot" />
-          <b>ESP32 ONLINE</b>
-          <span className="separator" />
-          <span>SYNCED 4 SEC AGO</span>
-        </div>
-
-        <div className="clock-block">
-          <div className="clock"><span>{time}</span><sup>{seconds}</sup></div>
-          <div className="clock-meta"><span>{date.toUpperCase()}</span><span>MYT</span></div>
-        </div>
-      </header>
-
-      <section className="dashboard-grid">
-        <article className="plant-panel neu-raised">
-          <div className="panel-topline">
-            <div>
-              <div className="eyebrow">PLANT PROFILE / 01</div>
-              <h1>Anak Pokok Lohansung</h1>
-              <p className="species">Podocarpus macrophyllus · young specimen</p>
-            </div>
-            <div className="live-tag neu-inset"><span /> LIVE</div>
-          </div>
-
-          <div
-            className={`plant-stage neu-inset ${isPlantAwake ? "is-awake" : ""}`}
-            ref={plantRef}
-            onPointerMove={respondToPointer}
-            onPointerEnter={() => setPlantAwake(true)}
-            onPointerLeave={() => setPlantTilt({ x: 0, y: 0 })}
-            style={{ "--tilt-x": `${plantTilt.x}deg`, "--tilt-y": `${plantTilt.y}deg` } as React.CSSProperties}
-            aria-label="Interactive young Lohansung, Podocarpus macrophyllus, plant model"
-          >
-            <div className="plant-halo" />
-            <div className="orbit orbit-a" />
-            <div className="orbit orbit-b" />
-
-            <div className="lohansung-model">
-              <div className="trunk" />
-              {lohansungBranches.map((branch, index) => (
-                <i
-                  className="lohansung-branch"
-                  key={`branch-${index}`}
-                  style={{
-                    "--branch-x": `${branch.x}px`,
-                    "--branch-y": `${branch.y}px`,
-                    "--branch-r": `${branch.r}deg`,
-                    "--branch-h": `${branch.h}px`,
-                  } as React.CSSProperties}
-                />
-              ))}
-              {lohansungLeaves.map((leaf, index) => (
-                <span
-                  className="lohansung-leaf"
-                  key={`leaf-${index}`}
-                  style={{
-                    "--leaf-x": `${leaf.x}px`,
-                    "--leaf-y": `${leaf.y}px`,
-                    "--leaf-r": `${leaf.r}deg`,
-                    "--leaf-s": leaf.s,
-                  } as React.CSSProperties}
-                />
-              ))}
-              <div className="new-growth"><i /><i /><i /></div>
-              <div className="soil-disc" />
-              <div className="pot-rim" />
-              <div className="pot"><span /></div>
-              <div className="pot-shadow" />
-            </div>
-
-            <div className="plant-sensor sensor-a neu-chip"><span>SOIL</span><b>64%</b></div>
-            <div className="plant-sensor sensor-b neu-chip"><span>ROOT ZONE</span><b>23.8°C</b></div>
-          </div>
-
-          <div className="hydration-strip">
-            <div className="hydration-copy-block">
-              <div className="hydration-number">78<span>%</span></div>
-              <div><div className="metric-label">PLANT HYDRATION</div><p>Well hydrated · stable uptake</p></div>
-            </div>
-            <div className="hydration-bar neu-inset" role="progressbar" aria-label="Plant hydration" aria-valuenow={78} aria-valuemin={0} aria-valuemax={100}><span style={{ width: "78%" }} /></div>
-          </div>
-        </article>
-
-        <section className="metrics-column" aria-label="Sensor readings">
-          <article className="climate-card neu-raised">
-            <div className="card-heading">
-              <span className="metric-icon neu-inset">01</span>
-              <div><div className="metric-label">AIR CLIMATE</div><p>Ambient enclosure</p></div>
-              <span className="fresh-dot" />
-            </div>
-            <div className="climate-readings">
-              <div><span className="reading">28.4</span><span className="unit">°C</span><small>TEMPERATURE</small></div>
-              <div className="climate-divider" />
-              <div><span className="reading">72</span><span className="unit">%</span><small>AIR HUMIDITY</small></div>
-            </div>
-            <div className="mini-chart neu-inset" aria-label="24 hour climate trend">
-              {climateBars.map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}
-            </div>
-            <div className="chart-axis"><span>00:00</span><span>12:00</span><span>NOW</span></div>
-          </article>
-
-          <div className="split-metrics">
-            <article className="metric-card neu-raised">
-              <div className="card-heading"><span className="metric-icon neu-inset">02</span><div><div className="metric-label">SOIL MOISTURE</div><p>Capacitive probe</p></div></div>
-              <div className="radial-wrap">
-                <div className="radial-gauge neu-inset" style={{ "--value": 64 } as React.CSSProperties}><div><strong>64</strong><span>%</span><small>OPTIMAL</small></div></div>
-              </div>
-              <div className="metric-foot"><span>Target 55–75%</span><b>+2.1%</b></div>
-            </article>
-
-            <article className="metric-card neu-raised">
-              <div className="card-heading"><span className="metric-icon neu-inset">03</span><div><div className="metric-label">WATER TANK</div><p>Ultrasonic level</p></div></div>
-              <div className="tank-visual">
-                <div className="tank-shell neu-inset"><div className="water-fill"><span /></div></div>
-                <div className="tank-value"><strong>72</strong><span>%</span><small>4.6 L REMAINING</small></div>
-              </div>
-              <div className="metric-foot"><span>Est. 6 days</span><b>GOOD</b></div>
-            </article>
-          </div>
-
-          <article className="battery-card neu-raised">
-            <div className="battery-main">
-              <div className="card-heading"><span className="metric-icon neu-inset">04</span><div><div className="metric-label">ENERGY SYSTEM</div><p>Solar + Li-ion</p></div></div>
-              <div className="battery-reading"><strong>88</strong><span>%</span></div>
-            </div>
-            <div className="energy-flow">
-              <div className="energy-source"><span className="sun-icon neu-inset">✦</span><div><small>SOLAR INPUT</small><b>1.8 W</b></div></div>
-              <div className="flow-line"><i /><i /><i /></div>
-              <div className="battery-icon neu-inset"><span style={{ width: "88%" }} /></div>
-            </div>
-            <div className="metric-foot battery-foot"><span>Charging · 4.12 V</span><b>+0.6 W NET</b></div>
-          </article>
-        </section>
-      </section>
-
-      <footer className="system-strip neu-raised">
-        <div className="system-state"><span className="pulse-core" /><div><div className="metric-label">SYSTEM STATE</div><b>AUTO MONITORING</b></div></div>
-        <div className="strip-divider" />
-        <div className="watering-info"><span>NEXT WATERING</span><b>18:30</b><small>in 02h 14m</small></div>
-        <div className="strip-divider" />
-        <div className="pump-line"><span className="pump-node neu-inset">PUMP</span><i /><span className="soil-node neu-inset">ROOT ZONE</span></div>
-        <div className="strip-divider" />
-        <div className="device-info"><span>DEVICE</span><b>WPS-01</b><small>Firmware 1.4.2</small></div>
-      </footer>
-    </main>
-  );
+import { useEffect, useState } from "react";
+import PlantScene from "./plant-scene";
+function Icon({ name, size = 20 }: { name: string; size?: number }) {
+ const paths: Record<string, React.ReactNode> = {
+ leaf:<><path d="M20 4C9 2 3 6 5 14c2 8 15 6 15-10Z"/><path d="m4 21 11-12M9 16v-5m0 5h5"/></>,
+ grid:<><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></>,
+ drop:<path d="M12 3C9 8 5 11 5 15a7 7 0 0 0 14 0c0-4-4-7-7-12Zm-3 13c0 2 1 3 3 3"/>,
+ sun:<><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></>,
+ temp:<><path d="M9 14V5a3 3 0 0 1 6 0v9a5 5 0 1 1-6 0Z"/><path d="M12 8v10m5-12h3m-3 4h2"/></>,
+ battery:<><rect x="2" y="6" width="18" height="12" rx="3"/><path d="M22 10v4m-16-2h10m-5-3-3 6"/></>,
+ arrow:<path d="m8 5 7 7-7 7"/>,rotate:<><path d="M20 8a8 8 0 1 0 0 8M20 3v5h-5"/></>,info:<><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></>,clock:<><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>};
+ return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]||paths.leaf}</svg>;
+}
+export default function Home(){
+ const [now,setNow]=useState<Date|null>(null),[range,setRange]=useState("24 hours"),[watered,setWatered]=useState(false),[watering,setWatering]=useState(false),[auto,setAuto]=useState(true),[rotating,setRotating]=useState(false),[info,setInfo]=useState(false);
+ useEffect(()=>{setNow(new Date());const id=setInterval(()=>setNow(new Date()),1000);return()=>clearInterval(id)},[]);
+ useEffect(()=>{if(!watering)return;const id=setTimeout(()=>{setWatering(false);setWatered(true)},3500);return()=>clearTimeout(id)},[watering]);
+ useEffect(()=>{if(!info)return;const close=(e:KeyboardEvent)=>{if(e.key==="Escape")setInfo(false)};window.addEventListener("keydown",close);return()=>window.removeEventListener("keydown",close)},[info]);
+ const time=now?.toLocaleTimeString("en-GB",{timeZone:"Asia/Kuala_Lumpur",hour:"2-digit",minute:"2-digit"})||"--:--",date=now?.toLocaleDateString("en-GB",{timeZone:"Asia/Kuala_Lumpur",weekday:"short",day:"numeric",month:"short"})||"Malaysia time";
+ const soil=watered?68:64,hydration=watered?82:78;
+ const data=range==="7 days"?[58,55,68,62,57,70,64,60,55,72,67,64]:[60,59,58,57,56,55,66,65,64,63,62,61,60,59,58,57,56,68,67,66,65,64,64,64];
+ const points=data.map((v,i)=>`${i/(data.length-1)*640},${160-(v-40)*3}`).join(" ");
+ return <div className="app-layout"><aside className="sidebar"><a href="#overview" className="logo" aria-label="Verdant home"><Icon name="leaf" size={27}/></a><nav className="sidebar-nav">{[["overview","grid","Overview"],["plant","leaf","Plant profile"],["insights","drop","Water insights"],["energy","sun","Energy system"]].map(([id,icon,label],i)=><a key={id} href={`#${id}`} className={`nav-icon ${i===0?"selected":""}`} aria-label={label} title={label}><Icon name={icon}/></a>)}</nav><button className="nav-icon info-nav" aria-label="About this dashboard" onClick={()=>setInfo(true)}><Icon name="info"/></button><span className="avatar">H</span></aside>
+ <main id="overview" className="dashboard"><header className="topbar"><a className="wordmark" href="#overview">verdant<span> / </span><small>your little growing world</small></a><div className="header-right"><span className="demo-badge"><i/> Demo environment</span><div className="clock"><strong>{time}</strong><span>{date} · MYT</span></div></div></header>
+ <section className="page-heading"><div><div className="eyebrow">MY GARDEN / OVERVIEW</div><h1>A little care. <em>A lot of life.</em></h1><p>A closer look at your lohansung’s little world.</p></div><div className="garden-label"><Icon name="leaf" size={18}/><div>Balcony garden<small>01 plant · WPS–01</small></div></div></section>
+ <div className="main-grid"><section id="plant" className="plant-card surface"><div className="plant-card-head"><span className="eyebrow">YOUR GROWING COMPANION</span><span className="health-pill"><i/> Looking good</span></div><h2>Lohansung<span>01</span></h2><p className="latin">Podocarpus macrophyllus</p><div className="plant-viewport"><span className="scene-word">grow.</span><PlantScene rotating={rotating} watering={watering}/><div className="tree-note"><span>NEW GROWTH</span><strong>A little greener,<br/>every day.</strong></div><button className={`rotate-button ${rotating?"active":""}`} onClick={()=>setRotating(!rotating)} aria-label={rotating?"Stop rotating tree":"Rotate tree"} aria-pressed={rotating}><Icon name="rotate" size={17}/></button><span className="scene-hint">Drag to explore · hover to say hello</span></div><div className="hydration-summary"><div className="hydration-icon"><Icon name="drop" size={25}/></div><div className="hydration-text"><span>Plant hydration <small className="estimate">ESTIMATED</small></span><strong>{hydration}<small>%</small></strong></div><div className="hydration-status"><span>Happily hydrated</span><small>Right where it likes to be.</small></div></div><div className="hydration-track"><span style={{width:`${hydration}%`}}/></div></section>
+ <div className="readings-panel"><div className="section-title"><h3>The essentials</h3><span><i/> Sample sensor readings</span></div><div className="metric-grid"><article className="metric-card surface"><div className="metric-top"><span className="icon-box peach"><Icon name="temp"/></span><span>Temperature</span></div><div className="metric-reading">28.4<small>°C</small></div><div className="metric-bottom"><span>Ambient air</span><svg viewBox="0 0 100 28" className="sparkline"><path d="M0 20 9 17 18 19 27 12 36 15 45 8 54 11 63 5 72 9 81 4 90 7 100 3"/></svg></div></article>
+ <article className="metric-card surface"><div className="metric-top"><span className="icon-box blue"><Icon name="drop"/></span><span>Air humidity</span></div><div className="metric-reading">72<small>%</small></div><div className="metric-bottom"><span>A gentle, humid day</span><span className="small-status">Optimal</span></div></article>
+ <article className="metric-card surface"><div className="metric-top"><span className="icon-box green"><Icon name="leaf"/></span><span>Soil moisture</span></div><div className="metric-reading">{soil}<small>%</small></div><div className="soil-track"><span style={{width:`${soil}%`}}/></div><div className="metric-bottom"><span>Target 55–75%</span><span className="small-status">In balance</span></div></article>
+ <article className="metric-card surface"><div className="metric-top"><span className="icon-box blue"><Icon name="drop"/></span><span>Water tank</span></div><div className="tank-content"><div><div className="metric-reading">{watered?71:72}<small>%</small></div><p>4.6 L remaining</p></div><div className="tank"><div className="tank-water"/></div></div><div className="metric-bottom"><span>Ready for the days ahead</span><span className="small-status">~6 days</span></div></article></div>
+ <article id="energy" className="energy-card surface"><div className="energy-title"><span className="icon-box sand"><Icon name="sun"/></span><div><h3>A little sunshine goes a long way.</h3><p>Solar-powered care, all day long.</p></div></div><div className="energy-stats"><div className="battery-stat"><Icon name="battery" size={26}/><strong>88<small>%</small></strong><span>Battery</span></div><div className="energy-divider"/><div><strong>1.8<small> W</small></strong><span>Solar input</span></div><div className="charging"><i/> Charging</div></div><div className="battery-track"><span/></div></article><div className="care-note"><Icon name="leaf" size={18}/><p>All settled in. Your plant has everything it needs.</p></div></div></div>
+ <div id="insights" className="bottom-grid"><section className="chart-card surface"><div className="chart-heading"><div><span className="eyebrow">A HEALTHY LITTLE RHYTHM</span><h3>Moisture over time</h3></div><div className="range-switch" aria-label="Chart time range">{["24 hours","7 days"].map(r=><button key={r} className={range===r?"chosen":""} onClick={()=>setRange(r)} aria-pressed={range===r}>{r}</button>)}</div></div><div className="chart"><div className="chart-labels"><span>80%</span><span>60%</span><span>40%</span></div><svg viewBox="0 0 640 170" preserveAspectRatio="none" role="img" aria-label={`Demo soil moisture over ${range}`}><defs><linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#8ca87a" stopOpacity=".24"/><stop offset="1" stopColor="#8ca87a" stopOpacity="0"/></linearGradient></defs><path d="M0 40H640M0 100H640M0 160H640" stroke="#7c8b6c" strokeOpacity=".12" strokeDasharray="4 8"/><polygon points={`0,170 ${points} 640,170`} fill="url(#chart-fill)"/><polyline points={points} fill="none" stroke="#769662" strokeWidth="2.5" strokeLinejoin="round" vectorEffect="non-scaling-stroke"/></svg></div><div className="chart-footer"><span>{range==="24 hours"?"00:00":"6 days ago"}</span><span>{range==="24 hours"?"06:00":"4 days ago"}</span><span>{range==="24 hours"?"12:00":"2 days ago"}</span><span>Now</span></div></section>
+ <section className="watering-card surface"><div className="watering-heading"><span className="icon-box green"><Icon name="drop"/></span><div><h3>Thoughtful watering</h3><p>A little drink, at just the right time.</p></div><button className={`toggle ${auto?"on":""}`} role="switch" aria-label="Automatic watering demo" aria-checked={auto} onClick={()=>setAuto(!auto)}><span/></button></div><div className="watering-schedule"><div><span>{auto?"NEXT SCHEDULED":"MANUAL MODE"}</span><strong>{auto?"18:30":"Paused"}<small>{auto?"daily · MYT":"automatic schedule"}</small></strong></div><span className="schedule-clock"><Icon name="clock" size={27}/></span></div><button className="water-button" onClick={()=>setWatering(true)} disabled={watering}><Icon name="drop" size={17}/>{watering?"Giving it a drink…":watered?"Water again":"Water now"}<span><Icon name="arrow" size={17}/></span></button><p className="simulation-note" role="status">{watering?"Simulating a 120 ml watering cycle…":watered?"Demo complete. Moisture and hydration updated.":"Demo control · 120 ml per watering cycle"}</p></section></div>
+ <footer><span><i/> Verdant is keeping an eye on things.</span><span>Made for slower days & greener spaces.</span><button onClick={()=>setInfo(true)}>About & references <Icon name="arrow" size={12}/></button></footer></main>
+ {info&&<div className="modal-backdrop" onClick={()=>setInfo(false)}><section className="about-modal surface" role="dialog" aria-modal="true" aria-labelledby="about-title" onClick={e=>e.stopPropagation()}><button autoFocus className="modal-close" aria-label="Close about dialog" onClick={()=>setInfo(false)}>×</button><span className="eyebrow">BEHIND THE GARDEN</span><h2 id="about-title">A more natural kind of dashboard.</h2><p>This local prototype uses sample readings. Watering and scheduling simulate behavior; no physical pump or sensors are connected. Plant hydration is an illustrative estimate.</p><p>The procedural 3D tree is modelled after young lohansung photographs, with narrow leaves, woody branches and fresh green tips.</p><h3>Design & botanical references</h3><a href="https://dribbble.com/shots/13155544-White-Energy-Dashboard" target="_blank" rel="noreferrer">Petr Tejkal · White Energy Dashboard ↗</a><a href="https://nurserylive.com/products/podocarpus-macrophyllus-plant" target="_blank" rel="noreferrer">Nurserylive · Young Podocarpus photographs ↗</a><a href="https://www.rhs.org.uk/plants/13357/podocarpus-macrophyllus/details" target="_blank" rel="noreferrer">RHS · Podocarpus macrophyllus ↗</a><button className="water-button" onClick={()=>setInfo(false)}>Back to my garden</button></section></div>}</div>;
 }

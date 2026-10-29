@@ -16,10 +16,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Verdant.OS — Water Planting Monitor",
-  description: "Live plant hydration, water, climate and solar energy monitoring.",
+  description: "A little care, a lot of life. A natural plant care dashboard with an interactive 3D Lohansung tree.",
   icons: {
-    icon: "/plant-iot-dashboard/favicon.svg",
-    shortcut: "/plant-iot-dashboard/favicon.svg",
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
   },
 };
 
